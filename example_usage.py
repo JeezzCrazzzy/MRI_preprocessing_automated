@@ -75,8 +75,12 @@ def example_custom_processing():
     normalized = pipeline.normalize_intensity(bias_corrected, method='histogram')
     print("✓ Intensity normalization completed (histogram)")
     
+    # Custom registration to template
+    registered, registered_affine = pipeline.register_to_template(normalized, img.affine)
+    print("✓ Registration to template completed")
+    
     # Custom skull stripping with watershed method
-    stripped, brain_mask = pipeline.skull_stripping(normalized, method='watershed')
+    stripped, brain_mask = pipeline.skull_stripping(registered, method='watershed')
     print("✓ Skull stripping completed (watershed)")
     
     # Save custom results
@@ -84,8 +88,11 @@ def example_custom_processing():
     custom_results = {
         'original': img_data,
         'denoised': denoised,
+        'bias_field': bias_field,
         'bias_corrected': bias_corrected,
         'normalized': normalized,
+        'registered': registered,
+        'registered_affine': registered_affine,
         'stripped': stripped,
         'brain_mask': brain_mask,
         'affine': img.affine
@@ -159,6 +166,7 @@ def example_quality_control():
         'bias_corrected': bias_corrected,
         'normalized': normalized,
         'registered': registered,
+        'registered_affine': registered_affine,
         'stripped': stripped
     }
     
